@@ -1,111 +1,101 @@
-# IoT AQI Dashboard
+# IoT‑AQI Dashboard
 
-A lightweight, real-time Air Quality Index monitoring dashboard built with Next.js.
+  
 
-## Features
+A full‑stack **IoT Air‑Quality Index (AQI) Monitoring System** that streams sensor data from an ESP32‑based edge device to a cloud backend and renders an interactive, mobile‑first dashboard built with **Next 15**, **TypeScript**, **Tailwind CSS**, **Radix UI**, and **Recharts**.
 
-- Real-time AQI monitoring
-- Gas level readings (PM2.5, PM10, O₃, NO₂, SO₂, CO)
-- Interactive charts and visualizations
-- Lightweight and optimized for deployment
-- Responsive design
+> Live demo → [https://iotaqi353.netlify.app](https://iotaqi353.netlify.app)
 
-## Tech Stack
+---
 
-- **Framework**: Next.js 15.2.4
-- **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **UI Components**: Radix UI (minimal set)
+## ✨ Key Features
 
-## Local Development
+| Layer        | Highlights                                                                    |
+| ------------ | ----------------------------------------------------------------------------- |
+| **Edge**     | ESP32 + MQ‑3, MQ‑135, DHT‑11 sensors · Wi‑Fi MQTT push · On‑board calibration |
+| **Cloud**    | ThingSpeak / Firebase Realtime DB (swappable) · REST + WebSocket API          |
+| **Web**      | Next .js App Router · Tailwind CSS + Radix primitives · Dark‑mode support     |
+| **Data Viz** | Recharts area + bar graphs · real‑time spark‑lines · AQI colour coding        |
+| **CI/CD**    | GitHub → Netlify deploy preview & production · Node 18 runtime                |
 
-1. Install dependencies:
+---
+
+## 🏗 Architecture Diagram
+
+```
+[Sensors] → ESP32 MQTT → [Cloud DB] ←→ Next API Route → React Charts
+```
+
+---
+
+## 🚀 Quick Start
+
 ```bash
-npm install
+# 1 Clone repository
+$ git clone https://github.com/dipen353/IoT-AQI-Clean.git && cd IoT-AQI-Clean
+
+# 2 Install deps (Node ≥18)
+$ npm install
+
+# 3 Create .env.local and configure keys
+NEXT_PUBLIC_API_URL=https://api.thingspeak.com/channels/XXXX/fields/1.json
+
+# 4 Run dev server
+$ npm run dev
 ```
 
-2. Run the development server:
+Access [http://localhost:3000](http://localhost:3000).
+
+---
+
+## ⚙️ Configuration
+
+| Variable              | Description                                   |
+| --------------------- | --------------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | Endpoint that returns JSON formatted AQI data |
+| `NODE_VERSION`        | Locked to **18.20.8** on Netlify              |
+
+---
+
+## 📦 Tech Stack
+
+* **Frontend:** Next 15 · React 19 · TypeScript · Tailwind CSS · Radix UI · Framer Motion
+* **Charts:** Recharts
+* **Backend (optional):** ThingSpeak / Firebase Realtime DB
+* **Edge Device:** ESP32 WROOM‑32 · MQ‑3, MQ‑135 (air quality) · DHT‑11 (temp & RH)
+* **CI/CD:** GitHub Actions → Netlify
+
+---
+
+## 🧪 Testing
+
 ```bash
-npm run dev
+npm run lint   # ESLint + TypeScript strict mode
+npm run build  # Production build – will fail on type errors
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
 
-## Deployment to Netlify
+## 🛠 Roadmap
 
-### Option 1: Deploy via Netlify UI (Recommended)
+*
 
-1. **Push your code to GitHub**:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/yourusername/iot-aqi-dashboard.git
-   git push -u origin main
-   ```
+---
 
-2. **Deploy to Netlify**:
-   - Go to [netlify.com](https://netlify.com)
-   - Sign up/Login with your GitHub account
-   - Click "New site from Git"
-   - Choose your repository
-   - Set build settings:
-     - **Build command**: `npm run build`
-     - **Publish directory**: `out`
-   - Click "Deploy site"
+## 🤝 Contributing
 
-### Option 2: Deploy via Netlify CLI
+1. Fork the repo & create your branch (`git checkout -b feature/foo`)
+2. Commit your changes (`git commit -am 'feat: add foo'`)
+3. Push and open a PR against **main**
 
-1. **Install Netlify CLI**:
-   ```bash
-   npm install -g netlify-cli
-   ```
+All contributions, big or small, are welcome!
 
-2. **Login to Netlify**:
-   ```bash
-   netlify login
-   ```
+---
 
-3. **Deploy**:
-   ```bash
-   netlify deploy --prod
-   ```
+## 📄 License
 
-## Build Configuration
+Distributed under the **MIT License**. See `LICENSE` for details.
 
-The project is configured for static export with:
-- `next.config.mjs`: Static export enabled
-- `netlify.toml`: Netlify-specific configuration
-- Optimized bundle size (33 fewer dependencies)
+---
 
-## Project Structure
-
-```
-├── app/                    # Next.js app directory
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page
-│   └── analytics/         # Analytics page
-├── components/            # React components
-│   ├── ui/               # Minimal UI components
-│   ├── aqi-gauge.tsx     # AQI gauge component
-│   ├── gas-card.tsx      # Gas reading cards
-│   └── trend-chart.tsx   # Trend visualization
-├── lib/                  # Utilities
-├── public/               # Static assets
-└── out/                  # Static export (generated)
-```
-
-## Performance Optimizations
-
-- ✅ Removed 33 unused dependencies
-- ✅ Minimal UI component library
-- ✅ Static export for fast loading
-- ✅ Optimized bundle size
-- ✅ Lightweight theme system
-
-## License
-
-MIT License 
+> © 2025 Dipen Reddy – Built for academic and hobby IoT experimentation.
