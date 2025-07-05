@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 import { motion } from "framer-motion"
 import { ArrowUp, ArrowDown } from "lucide-react"
+import { getAQIColor } from "@/lib/utils"
 
 interface AQIVisualizationProps {
   value: number
@@ -44,50 +45,13 @@ export default function AQIVisualization({
   }
 
   // Determine AQI category and color
-  const getCategory = () => {
-    if (currentValue <= 50) return "Good"
-    if (currentValue <= 100) return "Moderate"
-    if (currentValue <= 150) return "Unhealthy for Sensitive Groups"
-    if (currentValue <= 200) return "Unhealthy"
-    if (currentValue <= 300) return "Very Unhealthy"
-    return "Hazardous"
-  }
-
-  const getColor = () => {
-    if (currentValue <= 50) return theme === "dark" ? "#14532D" : "#90EE90" // Good - Green
-    if (currentValue <= 100) return "#FFDE33" // Moderate - Yellow
-    if (currentValue <= 150) return "#FF9933" // Unhealthy for Sensitive Groups - Orange
-    if (currentValue <= 200) return "#FF3333" // Unhealthy - Red
-    if (currentValue <= 300) return "#990099" // Very Unhealthy - Purple
-    return "#660000" // Hazardous - Maroon
-  }
-
-  const getTextColor = () => {
-    if (currentValue <= 50) return "text-safety-green"
-    if (currentValue <= 100) return "text-yellow-400"
-    if (currentValue <= 150) return "text-orange-400"
-    if (currentValue <= 200) return "text-red-500"
-    if (currentValue <= 300) return "text-purple-500"
-    return "text-red-900"
-  }
-
-  const getBackgroundColor = () => {
-    if (currentValue <= 50) return "bg-safety-green/10"
-    if (currentValue <= 100) return "bg-yellow-400/10"
-    if (currentValue <= 150) return "bg-orange-400/10"
-    if (currentValue <= 200) return "bg-red-500/10"
-    if (currentValue <= 300) return "bg-purple-500/10"
-    return "bg-red-900/10"
-  }
-
-  const getBorderColor = () => {
-    if (currentValue <= 50) return "border-safety-green"
-    if (currentValue <= 100) return "border-yellow-400"
-    if (currentValue <= 150) return "border-orange-400"
-    if (currentValue <= 200) return "border-red-500"
-    if (currentValue <= 300) return "border-purple-500"
-    return "border-red-900"
-  }
+  const aqiColor = getAQIColor(currentValue)
+  const colorClass =
+    aqiColor === "green"
+      ? "text-safety-green bg-safety-green/10 border-safety-green"
+      : aqiColor === "yellow"
+      ? "text-yellow-600 bg-yellow-200/30 border-yellow-400"
+      : "text-danger-coral bg-danger-coral/10 border-danger-coral"
 
   // Calculate percentage for the progress bar
   const percentage = Math.min((currentValue / maxValue) * 100, 100)
@@ -100,15 +64,26 @@ export default function AQIVisualization({
     <div className="w-full">
       <div className="flex flex-col items-center mb-4">
         <motion.div
-          className={`text-7xl font-bold font-manrope ${getTextColor()}`}
+          className={`text-7xl font-bold font-manrope ${aqiColor === "green" ? "text-safety-green" : aqiColor === "yellow" ? "text-yellow-600" : "text-danger-coral"}`}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           {currentValue}
         </motion.div>
-        <div className="text-xl font-semibold font-manrope mt-2">{getCategory()}</div>
-
+        <div className="text-xl font-semibold font-manrope mt-2">
+          {currentValue <= 50
+            ? "Good"
+            : currentValue <= 100
+            ? "Moderate"
+            : currentValue <= 150
+            ? "Unhealthy for Sensitive Groups"
+            : currentValue <= 200
+            ? "Unhealthy"
+            : currentValue <= 300
+            ? "Very Unhealthy"
+            : "Hazardous"}
+        </div>
         <div className="flex items-center mt-2">
           {change !== 0 && (
             <div className={`flex items-center text-sm ${change > 0 ? "text-danger-coral" : "text-safety-green"}`}>
@@ -118,16 +93,13 @@ export default function AQIVisualization({
           )}
         </div>
       </div>
-
       <div className="relative h-8 w-full bg-muted rounded-full overflow-hidden mb-4">
         <motion.div
-          className="absolute top-0 left-0 h-full rounded-full"
-          style={{ backgroundColor: getColor() }}
+          className={`absolute top-0 left-0 h-full rounded-full ${aqiColor === "green" ? "bg-safety-green" : aqiColor === "yellow" ? "bg-yellow-200" : "bg-danger-coral"}`}
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
           transition={{ duration: 1 }}
         />
-
         {/* AQI category markers */}
         {[50, 100, 150, 200, 300].map((marker) => {
           const markerPosition = (marker / maxValue) * 100
@@ -142,10 +114,9 @@ export default function AQIVisualization({
           )
         })}
       </div>
-
-      <div className={`p-4 rounded-lg ${getBackgroundColor()} border ${getBorderColor()} mt-4`}>
+      <div className={`p-4 rounded-lg border mt-4 ${colorClass}`}>
         <h3 className="font-semibold mb-2">Health Implications</h3>
-        <p className="text-sm">
+        <p className="text-base text-foreground font-manrope">
           {currentValue <= 50 && "Air quality is considered satisfactory, and air pollution poses little or no risk."}
           {currentValue > 50 &&
             currentValue <= 100 &&

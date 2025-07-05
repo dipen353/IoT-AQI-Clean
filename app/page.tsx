@@ -1,20 +1,82 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronRight, BarChart2 } from "lucide-react"
+import { ChevronRight, BarChart2, Sun, Droplets } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import GasCard from "@/components/gas-card"
 import AQIVisualization from "@/components/aqi-visualization"
 import PollutantTrendsCard from "@/components/pollutant-trends-card"
+import { useState } from "react"
+import { getAQIColor } from "@/lib/utils"
 
-// Sample data for sparklines
-const co2Data = [550, 570, 590, 580, 560, 580, 590, 600, 580, 570, 580]
-const pm25Data = [9.8, 10.1, 10.5, 10.2, 9.9, 10.0, 10.3, 10.2, 10.1, 10.2, 10.2]
-const vocData = [0.25, 0.28, 0.27, 0.26, 0.29, 0.28, 0.27, 0.26, 0.25, 0.27, 0.28]
-const coData = [8, 7, 9, 8, 7, 6, 8, 9, 8, 7, 8]
-const no2Data = [45, 48, 50, 49, 47, 46, 48, 50, 49, 48, 47]
+const AQI_SCENARIOS = {
+  good: {
+    label: "Good",
+    aqi: 38,
+    co2: 420,
+    pm25: 7,
+    voc: 0.12,
+    co: 3,
+    no2: 18,
+    temp: 24,
+    humidity: 42,
+    updated: "2 minutes ago",
+    color: "green",
+  },
+  moderate: {
+    label: "Moderate",
+    aqi: 85,
+    co2: 700,
+    pm25: 22,
+    voc: 0.32,
+    co: 7,
+    no2: 55,
+    temp: 27,
+    humidity: 55,
+    updated: "5 minutes ago",
+    color: "yellow",
+  },
+  unhealthy: {
+    label: "Unhealthy",
+    aqi: 142,
+    co2: 1200,
+    pm25: 48,
+    voc: 0.7,
+    co: 13,
+    no2: 120,
+    temp: 30,
+    humidity: 68,
+    updated: "1 minute ago",
+    color: "red",
+  },
+}
 
 export default function HomePage() {
+  const [scenario, setScenario] = useState<keyof typeof AQI_SCENARIOS>("good")
+  const data = AQI_SCENARIOS[scenario]
+
+  // For sparklines, generate simple arrays around the scenario value
+  const co2Data = Array(11).fill(data.co2).map((v, i) => v + (Math.random() - 0.5) * 20)
+  const pm25Data = Array(11).fill(data.pm25).map((v, i) => v + (Math.random() - 0.5) * 2)
+  const vocData = Array(11).fill(data.voc).map((v, i) => v + (Math.random() - 0.5) * 0.05)
+  const coData = Array(11).fill(data.co).map((v, i) => v + (Math.random() - 0.5) * 1)
+  const no2Data = Array(11).fill(data.no2).map((v, i) => v + (Math.random() - 0.5) * 5)
+
+  const aqiCardColor = getAQIColor(data.aqi)
+  const aqiCardBorderClass =
+    aqiCardColor === "green"
+      ? "border-safety-green hover:border-safety-green"
+      : aqiCardColor === "yellow"
+      ? "border-yellow-400 hover:border-yellow-400"
+      : "border-danger-coral hover:border-danger-coral"
+
+  const topAnalyticsHoverClass =
+    aqiCardColor === "green"
+      ? "hover:text-safety-green"
+      : aqiCardColor === "yellow"
+      ? "hover:text-yellow-600"
+      : "hover:text-danger-coral"
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
@@ -22,7 +84,7 @@ export default function HomePage() {
         <div className="flex items-center space-x-4">
           <Link
             href="/analytics"
-            className="flex items-center text-sm font-medium hover:text-safety-green transition-colors"
+            className={`flex items-center text-sm font-medium transition-colors ${topAnalyticsHoverClass}`}
           >
             <BarChart2 className="h-4 w-4 mr-1" />
             Analytics
@@ -31,52 +93,86 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Demo Toggle */}
+      <div className="flex items-center justify-center mb-6">
+        <div className="inline-flex rounded-md shadow-sm bg-muted border border-muted-foreground/10">
+          {Object.entries(AQI_SCENARIOS).map(([key, val]) => {
+            let selectedColor =
+              val.color === "green"
+                ? "bg-safety-green/20 text-safety-green border border-safety-green focus:ring-safety-green/40"
+                : val.color === "yellow"
+                ? "bg-yellow-200 text-yellow-600 border border-yellow-400 focus:ring-yellow-300"
+                : "bg-danger-coral/20 text-danger-coral border border-danger-coral focus:ring-danger-coral/40"
+            return (
+              <button
+                key={key}
+                className={`px-4 py-2 text-sm font-medium font-manrope transition-colors rounded-md focus:outline-none focus:ring-2 ${scenario === key ? selectedColor : "text-muted-foreground hover:bg-muted/60 border border-transparent"}`}
+                onClick={() => setScenario(key as keyof typeof AQI_SCENARIOS)}
+                type="button"
+              >
+                {val.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Weather Info Card */}
+      <div className="flex justify-center mb-4">
+        <div className="flex items-center gap-4 px-4 py-2 rounded-lg bg-muted/40 border border-muted-foreground/10 text-sm text-muted-foreground shadow-sm min-w-[220px] max-w-xs">
+          <Sun className="h-5 w-5 text-yellow-400" />
+          <span>{data.temp}°C</span>
+          <Droplets className="h-5 w-5 text-blue-400 ml-2" />
+          <span>{data.humidity}%</span>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card className="p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] border-safety-green/20 hover:border-safety-green">
+        <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] ${aqiCardBorderClass}`}>
           <h2 className="text-xl font-semibold font-manrope mb-4">Air Quality Index</h2>
-          <AQIVisualization value={72} previousValue={78} />
-          <div className="mt-4 text-sm font-space-grotesk text-muted-foreground text-center">Updated 5 minutes ago</div>
+          <AQIVisualization value={data.aqi} previousValue={data.aqi - 6} />
+          <div className="mt-4 text-sm font-space-grotesk text-muted-foreground text-center">Updated {data.updated}</div>
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <GasCard
             title="CO₂ Levels"
-            value={580}
+            value={data.co2}
             unit="ppm"
-            status="Within safe range"
+            status="CO₂ concentration"
             data={co2Data}
-            threshold={600}
-            change={2.5}
+            threshold={1000}
+            change={parseFloat(((data.co2 - 600) / 600 * 100).toFixed(1))}
           />
 
           <GasCard
             title="PM2.5 Levels"
-            value={10.2}
+            value={data.pm25}
             unit="μg/m³"
-            status="Within safe range"
+            status="PM2.5 concentration"
             data={pm25Data}
-            threshold={12}
-            change={-1.2}
+            threshold={35}
+            change={parseFloat(((data.pm25 - 12) / 12 * 100).toFixed(1))}
           />
 
           <GasCard
             title="VOC Levels"
-            value={0.28}
+            value={data.voc}
             unit="mg/m³"
-            status="Within safe range"
+            status="VOC concentration"
             data={vocData}
-            threshold={0.3}
-            change={3.7}
+            threshold={0.5}
+            change={parseFloat(((data.voc - 0.3) / 0.3 * 100).toFixed(1))}
           />
 
           <GasCard
             title="CO Levels"
-            value={8}
+            value={data.co}
             unit="ppm"
-            status="Within safe range"
+            status="CO concentration"
             data={coData}
             threshold={9}
-            change={-2.1}
+            change={parseFloat(((data.co - 5) / 5 * 100).toFixed(1))}
           />
         </div>
       </div>
