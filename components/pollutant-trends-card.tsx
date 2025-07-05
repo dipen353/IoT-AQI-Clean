@@ -1,3 +1,4 @@
+// components/pollutant-trends-card.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -9,25 +10,75 @@ import { TrendingDown, TrendingUp, Info } from "lucide-react"
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const pollutants = [
-  { id: "co2", name: "CO₂", unit: "ppm", threshold: 1000, description: "Carbon dioxide levels above 1000 ppm can cause drowsiness and impair cognitive function.", color: "#6366F1" },
-  { id: "pm25", name: "PM2.5", unit: "μg/m³", threshold: 35, description: "Fine particulate matter can penetrate deep into the lungs and cause respiratory issues.", color: "#3B82F6" },
-  { id: "voc", name: "VOCs", unit: "mg/m³", threshold: 0.5, description: "Volatile organic compounds can cause eye, nose, and throat irritation.", color: "#10B981" },
-  { id: "co", name: "CO", unit: "ppm", threshold: 9, description: "Carbon monoxide is a toxic gas that can cause headaches and dizziness.", color: "#F59E0B" },
-  { id: "no2", name: "NO₂", unit: "ppb", threshold: 100, description: "Nitrogen dioxide can worsen respiratory conditions like asthma.", color: "#EF4444" },
-  { id: "o3", name: "Ozone", unit: "ppb", threshold: 70, description: "Ground-level ozone can trigger a variety of health problems including chest pain and coughing.", color: "#8B5CF6" },
+  {
+    id: "co2",
+    name: "CO₂",
+    unit: "ppm",
+    threshold: 1000,
+    description: "Carbon dioxide levels above 1000 ppm can cause drowsiness and impair cognitive function.",
+    color: "#6366F1",
+  },
+  {
+    id: "pm25",
+    name: "PM2.5",
+    unit: "μg/m³",
+    threshold: 35,
+    description: "Fine particulate matter can penetrate deep into the lungs and cause respiratory issues.",
+    color: "#3B82F6",
+  },
+  {
+    id: "voc",
+    name: "VOCs",
+    unit: "mg/m³",
+    threshold: 0.5,
+    description: "Volatile organic compounds can cause eye, nose, and throat irritation.",
+    color: "#10B981",
+  },
+  {
+    id: "co",
+    name: "CO",
+    unit: "ppm",
+    threshold: 9,
+    description: "Carbon monoxide is a toxic gas that can cause headaches and dizziness.",
+    color: "#F59E0B",
+  },
+  {
+    id: "no2",
+    name: "NO₂",
+    unit: "ppb",
+    threshold: 100,
+    description: "Nitrogen dioxide can worsen respiratory conditions like asthma.",
+    color: "#EF4444",
+  },
+  {
+    id: "o3",
+    name: "Ozone",
+    unit: "ppb",
+    threshold: 70,
+    description: "Ground-level ozone can trigger a variety of health problems including chest pain and coughing.",
+    color: "#8B5CF6",
+  },
 ]
 
-const generateTrendData = (base: number, variance: number, threshold: number, days = 7) => {
+const generateTrendData = (baseValue: number, variance: number, threshold: number, days = 7) => {
   const result = []
   const today = new Date()
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
+    const dayName = dayNames[date.getDay()]
     const randomVariance = (Math.random() * 2 - 1) * variance
-    const value = Math.max(0, base + randomVariance)
-    result.push({ day: dayNames[date.getDay()], value: Number.parseFloat(value.toFixed(1)), threshold })
+    const value = Math.max(0, baseValue + randomVariance)
+
+    result.push({
+      day: dayName,
+      value: Number.parseFloat(value.toFixed(1)),
+      threshold,
+    })
   }
+
   return result
 }
 
@@ -49,13 +100,13 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   const [mounted, setMounted] = useState(false)
   const { theme } = useTheme()
 
-  useEffect(() => setMounted(true), [])
-
-  const cardClass = `transition duration-200 hover:shadow-lg hover:scale-[1.02] hover:border-primary ${className ?? ""}`
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   if (!mounted) {
     return (
-      <Card className={cardClass}>
+      <Card className={className}>
         <CardHeader>
           <CardTitle>Pollutant Trends</CardTitle>
         </CardHeader>
@@ -71,7 +122,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   const currentValue = data[data.length - 1].value
   const previousValue = data[data.length - 2].value
   const change = currentValue - previousValue
-  const changePercentage = Math.round((change / previousValue) * 1000) / 10
+  const changePercentage = Math.round((change / previousValue) * 100 * 10) / 10
   const isSafe = currentValue <= activePollutant.threshold
 
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -94,7 +145,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   }
 
   return (
-    <Card className={cardClass}>
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Pollutant Trends</span>
@@ -130,38 +181,24 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                   <div className="mb-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold font-manrope">{pollutant.name}</h3>
-                      <div
-                        className={`text-sm font-space-grotesk ${isSafe ? "text-safety-green" : "text-danger-coral"}`}
-                      >
+                      <div className={`text-sm font-space-grotesk ${isSafe ? "text-safety-green" : "text-danger-coral"}`}>
                         {isSafe ? "✓ Safe" : "⚠ Unsafe"}
                       </div>
                     </div>
-
                     <div className="flex items-baseline mt-2">
-                      <div
-                        className={`text-4xl font-bold font-manrope ${isSafe ? "text-safety-green" : "text-danger-coral"}`}
-                      >
+                      <div className={`text-4xl font-bold font-manrope ${isSafe ? "text-safety-green" : "text-danger-coral"}`}>
                         {currentValue}
                       </div>
                       <div className="text-sm font-space-grotesk text-muted-foreground ml-2">{pollutant.unit}</div>
-
                       {change !== 0 && (
-                        <div
-                          className={`flex items-center text-sm ml-4 ${change > 0 ? "text-danger-coral" : "text-safety-green"}`}
-                        >
-                          {change > 0 ? (
-                            <TrendingUp className="h-4 w-4 mr-1" />
-                          ) : (
-                            <TrendingDown className="h-4 w-4 mr-1" />
-                          )}
+                        <div className={`flex items-center text-sm ml-4 ${change > 0 ? "text-danger-coral" : "text-safety-green"}`}>
+                          {change > 0 ? <TrendingUp className="h-4 w-4 mr-1" /> : <TrendingDown className="h-4 w-4 mr-1" />}
                           {Math.abs(changePercentage)}%
                         </div>
                       )}
                     </div>
                   </div>
-
                   <div className="text-sm text-muted-foreground mb-4">{pollutant.description}</div>
-
                   <div className="mb-2 relative h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isSafe ? "bg-safety-green" : "bg-danger-coral"}`}
@@ -170,27 +207,16 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                       }}
                     />
                   </div>
-
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>0 {pollutant.unit}</span>
-                    <span>
-                      Threshold: {pollutant.threshold} {pollutant.unit}
-                    </span>
+                    <span>Threshold: {pollutant.threshold} {pollutant.unit}</span>
                   </div>
                 </div>
-
                 <div className="md:w-2/3 h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={pollutantData[pollutant.id as keyof typeof pollutantData]}>
                       <XAxis dataKey="day" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} tickMargin={10} />
-                      <YAxis
-                        domain={[0, "auto"]}
-                        tick={{ fontSize: 12 }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={10}
-                        width={40}
-                      />
+                      <YAxis domain={[0, "auto"]} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} tickMargin={10} width={40} />
                       <Tooltip content={<CustomTooltip />} />
                       <ReferenceLine
                         y={pollutant.threshold}
