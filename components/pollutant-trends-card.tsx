@@ -8,83 +8,29 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceL
 import { TrendingDown, TrendingUp, Info } from "lucide-react"
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
-// Define pollutant types and their properties
 const pollutants = [
-  {
-    id: "co2",
-    name: "CO₂",
-    unit: "ppm",
-    threshold: 1000,
-    description: "Carbon dioxide levels above 1000 ppm can cause drowsiness and impair cognitive function.",
-    color: "#6366F1", // Indigo
-  },
-  {
-    id: "pm25",
-    name: "PM2.5",
-    unit: "μg/m³",
-    threshold: 35,
-    description: "Fine particulate matter can penetrate deep into the lungs and cause respiratory issues.",
-    color: "#3B82F6", // Blue
-  },
-  {
-    id: "voc",
-    name: "VOCs",
-    unit: "mg/m³",
-    threshold: 0.5,
-    description: "Volatile organic compounds can cause eye, nose, and throat irritation.",
-    color: "#10B981", // Emerald
-  },
-  {
-    id: "co",
-    name: "CO",
-    unit: "ppm",
-    threshold: 9,
-    description: "Carbon monoxide is a toxic gas that can cause headaches and dizziness.",
-    color: "#F59E0B", // Amber
-  },
-  {
-    id: "no2",
-    name: "NO₂",
-    unit: "ppb",
-    threshold: 100,
-    description: "Nitrogen dioxide can worsen respiratory conditions like asthma.",
-    color: "#EF4444", // Red
-  },
-  {
-    id: "o3",
-    name: "Ozone",
-    unit: "ppb",
-    threshold: 70,
-    description: "Ground-level ozone can trigger a variety of health problems including chest pain and coughing.",
-    color: "#8B5CF6", // Purple
-  },
+  { id: "co2", name: "CO₂", unit: "ppm", threshold: 1000, description: "Carbon dioxide levels above 1000 ppm can cause drowsiness and impair cognitive function.", color: "#6366F1" },
+  { id: "pm25", name: "PM2.5", unit: "μg/m³", threshold: 35, description: "Fine particulate matter can penetrate deep into the lungs and cause respiratory issues.", color: "#3B82F6" },
+  { id: "voc", name: "VOCs", unit: "mg/m³", threshold: 0.5, description: "Volatile organic compounds can cause eye, nose, and throat irritation.", color: "#10B981" },
+  { id: "co", name: "CO", unit: "ppm", threshold: 9, description: "Carbon monoxide is a toxic gas that can cause headaches and dizziness.", color: "#F59E0B" },
+  { id: "no2", name: "NO₂", unit: "ppb", threshold: 100, description: "Nitrogen dioxide can worsen respiratory conditions like asthma.", color: "#EF4444" },
+  { id: "o3", name: "Ozone", unit: "ppb", threshold: 70, description: "Ground-level ozone can trigger a variety of health problems including chest pain and coughing.", color: "#8B5CF6" },
 ]
 
-// Generate sample data for each pollutant
-const generateTrendData = (baseValue: number, variance: number, threshold: number, days = 7) => {
+const generateTrendData = (base: number, variance: number, threshold: number, days = 7) => {
   const result = []
   const today = new Date()
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
-
-    const dayName = dayNames[date.getDay()]
     const randomVariance = (Math.random() * 2 - 1) * variance
-    const value = Math.max(0, baseValue + randomVariance)
-
-    result.push({
-      day: dayName,
-      value: Number.parseFloat(value.toFixed(1)),
-      threshold,
-    })
+    const value = Math.max(0, base + randomVariance)
+    result.push({ day: dayNames[date.getDay()], value: Number.parseFloat(value.toFixed(1)), threshold })
   }
-
   return result
 }
 
-// Sample data for each pollutant
 const pollutantData = {
   co2: generateTrendData(580, 100, 1000),
   pm25: generateTrendData(18, 8, 35),
@@ -103,14 +49,13 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   const [mounted, setMounted] = useState(false)
   const { theme } = useTheme()
 
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  useEffect(() => setMounted(true), [])
+
+  const cardClass = `transition duration-200 hover:shadow-lg hover:scale-[1.02] hover:border-primary ${className ?? ""}`
 
   if (!mounted) {
     return (
-      <Card className={className}>
+      <Card className={cardClass}>
         <CardHeader>
           <CardTitle>Pollutant Trends</CardTitle>
         </CardHeader>
@@ -123,22 +68,16 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
 
   const activePollutant = pollutants.find((p) => p.id === activeTab) || pollutants[0]
   const data = pollutantData[activeTab as keyof typeof pollutantData]
-
-  // Get the current and previous values
   const currentValue = data[data.length - 1].value
   const previousValue = data[data.length - 2].value
   const change = currentValue - previousValue
-  const changePercentage = Math.round((change / previousValue) * 100 * 10) / 10
-
-  // Determine if the current value is safe
+  const changePercentage = Math.round((change / previousValue) * 1000) / 10
   const isSafe = currentValue <= activePollutant.threshold
 
-  // Custom tooltip for the chart
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const dataPoint = payload[0].payload
       const isSafe = dataPoint.value <= dataPoint.threshold
-
       return (
         <div className="bg-background p-3 border border-border rounded-md shadow-md">
           <p className="font-manrope font-semibold">{label}</p>
@@ -155,7 +94,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   }
 
   return (
-    <Card className={className}>
+    <Card className={cardClass}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Pollutant Trends</span>
@@ -187,7 +126,6 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
           {pollutants.map((pollutant) => (
             <TabsContent key={pollutant.id} value={pollutant.id} className="mt-0">
               <div className="flex flex-col md:flex-row gap-6">
-                {/* Current value and info */}
                 <div className="md:w-1/3">
                   <div className="mb-4">
                     <div className="flex items-center justify-between">
@@ -224,7 +162,6 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
 
                   <div className="text-sm text-muted-foreground mb-4">{pollutant.description}</div>
 
-                  {/* Threshold gauge */}
                   <div className="mb-2 relative h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isSafe ? "bg-safety-green" : "bg-danger-coral"}`}
@@ -242,7 +179,6 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                   </div>
                 </div>
 
-                {/* Chart */}
                 <div className="md:w-2/3 h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={pollutantData[pollutant.id as keyof typeof pollutantData]}>
@@ -256,8 +192,6 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                         width={40}
                       />
                       <Tooltip content={<CustomTooltip />} />
-
-                      {/* Threshold line */}
                       <ReferenceLine
                         y={pollutant.threshold}
                         stroke={theme === "dark" ? "hsl(0, 70%, 40%)" : "hsl(0, 100%, 70%)"}
@@ -269,7 +203,6 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                           fontSize: 12,
                         }}
                       />
-
                       <Line
                         type="monotone"
                         dataKey="value"
@@ -290,4 +223,3 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
     </Card>
   )
 }
-
