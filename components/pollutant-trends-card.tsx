@@ -106,7 +106,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
 
   if (!mounted) {
     return (
-      <Card className={className}>
+      <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] border-safety-green/20 hover:border-safety-green ${className || ""}`}>
         <CardHeader>
           <CardTitle>Pollutant Trends</CardTitle>
         </CardHeader>
@@ -145,7 +145,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   }
 
   return (
-    <Card className={className}>
+    <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] border-safety-green/20 hover:border-safety-green ${className || ""}`}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Pollutant Trends</span>
