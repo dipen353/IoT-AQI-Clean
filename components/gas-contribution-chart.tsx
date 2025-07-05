@@ -39,10 +39,22 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null
 }
 
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < breakpoint)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [breakpoint])
+  return isMobile
+}
+
 export default function GasContributionChart() {
   const { theme } = useTheme()
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [mounted, setMounted] = useState(false)
+  const isMobile = useIsMobile()
   
   // Prevent hydration mismatch
   useEffect(() => {
@@ -68,44 +80,68 @@ export default function GasContributionChart() {
   const data = theme === "dark" ? darkModeGasData : gasData
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          innerRadius={80}
-          outerRadius={activeIndex !== null ? 150 : 140}
-          paddingAngle={2}
-          dataKey="value"
-          onMouseEnter={onPieEnter}
-          onMouseLeave={onPieLeave}
-          animationDuration={500}
-        >
-          {data.map((entry, index) => (
-            <Cell 
-              key={`cell-${index}`} 
-              fill={entry.color} 
-              stroke={activeIndex === index ? (theme === "dark" ? "#ffffff" : "#000000") : "transparent"}
-              strokeWidth={2}
-              style={{
-                filter: activeIndex === index ? `drop-shadow(0px 0px 6px ${theme === "dark" ? "rgba(20, 83, 45, 0.5)" : "rgba(144, 238, 144, 0.5)"})` : "none",
-                transition: "all 0.3s ease"
-              }}
-            />
-          ))}
-        </Pie>
-        <Tooltip content={<CustomTooltip />} />
-        <Legend 
-          layout="vertical" 
-          verticalAlign="middle" 
-          align="right"
-          formatter={(value, entry: any, index) => (
-            <span className={`font-space-grotesk ${activeIndex === index ? "font-bold" : ""}`}>{value}</span>
-          )}
-        />
-      </PieChart>
-    </ResponsiveContainer>
+    <div className={`w-full h-full ${isMobile ? "flex flex-col items-center justify-center" : "flex flex-row items-center justify-center"}`}>
+      {/* Chart */}
+      <div className={isMobile ? "w-full" : "w-2/3 min-w-[320px] max-w-[400px]"}>
+        <ResponsiveContainer width="100%" height={isMobile ? 260 : 400}>
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy={isMobile ? 120 : "50%"}
+              innerRadius={isMobile ? 50 : 80}
+              outerRadius={isMobile ? (activeIndex !== null ? 100 : 90) : (activeIndex !== null ? 150 : 140)}
+              paddingAngle={2}
+              dataKey="value"
+              onMouseEnter={onPieEnter}
+              onMouseLeave={onPieLeave}
+              animationDuration={500}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  stroke={activeIndex === index ? (theme === "dark" ? "#ffffff" : "#000000") : "transparent"}
+                  strokeWidth={2}
+                  style={{
+                    filter: activeIndex === index ? `drop-shadow(0px 0px 6px ${theme === "dark" ? "rgba(20, 83, 45, 0.5)" : "rgba(144, 238, 144, 0.5)"})` : "none",
+                    transition: "all 0.3s ease"
+                  }}
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      {/* Legend */}
+      <div
+        className={
+          isMobile
+            ? "mt-4 flex flex-row overflow-x-auto gap-3 justify-center w-full"
+            : "ml-8 flex flex-col gap-3 items-start min-w-[120px]"
+        }
+        style={isMobile ? {} : { height: 340 }}
+      >
+        {data.map((entry, index) => (
+          <button
+            key={entry.name}
+            className={`flex items-center px-2 py-1 rounded-md font-space-grotesk text-sm whitespace-nowrap transition-all ${activeIndex === index ? "font-bold bg-muted/60" : "bg-transparent"}`}
+            style={{ minWidth: 80 }}
+            onMouseEnter={() => setActiveIndex(index)}
+            onMouseLeave={onPieLeave}
+            onTouchStart={() => setActiveIndex(index)}
+            onTouchEnd={onPieLeave}
+          >
+            <span
+              className="inline-block w-3 h-3 rounded-full mr-2"
+              style={{ backgroundColor: entry.color, border: activeIndex === index ? "2px solid #000" : "none" }}
+            ></span>
+            {entry.name} <span className="ml-1 text-xs text-muted-foreground">{entry.value}%</span>
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }
 
