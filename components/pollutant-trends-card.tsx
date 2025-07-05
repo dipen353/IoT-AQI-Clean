@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from "recharts"
 import { TrendingDown, TrendingUp, Info } from "lucide-react"
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { getPollutantColor } from "@/lib/utils"
 
 const pollutants = [
   {
@@ -93,9 +94,12 @@ const pollutantData = {
 
 interface PollutantTrendsCardProps {
   className?: string
+  scenarioPollutants?: {
+    [key: string]: { value: number; threshold: number }
+  }
 }
 
-export default function PollutantTrendsCard({ className }: PollutantTrendsCardProps) {
+export default function PollutantTrendsCard({ className, scenarioPollutants }: PollutantTrendsCardProps) {
   const [activeTab, setActiveTab] = useState("co2")
   const [mounted, setMounted] = useState(false)
   const { theme } = useTheme()
@@ -118,12 +122,31 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   }
 
   const activePollutant = pollutants.find((p) => p.id === activeTab) || pollutants[0]
-  const data = pollutantData[activeTab as keyof typeof pollutantData]
-  const currentValue = data[data.length - 1].value
-  const previousValue = data[data.length - 2].value
+  // Use scenario values if provided, else fallback to default
+  const scenario = scenarioPollutants?.[activeTab]
+  const trendData = scenario
+    ? (() => {
+        // Generate 6 random values, last value is scenario.value
+        const arr = Array(6)
+          .fill(0)
+          .map(() => {
+            const variance = activePollutant.threshold * 0.1
+            return Math.max(0, scenario.value + (Math.random() - 0.5) * variance)
+          })
+        arr.push(scenario.value)
+        return arr.map((v, i) => ({
+          day: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][i % 7],
+          value: Number.parseFloat(v.toFixed(1)),
+          threshold: scenario.threshold,
+        }))
+      })()
+    : pollutantData[activeTab as keyof typeof pollutantData]
+  const currentValue = trendData[trendData.length - 1].value
+  const previousValue = trendData[trendData.length - 2].value
   const change = currentValue - previousValue
   const changePercentage = Math.round((change / previousValue) * 100 * 10) / 10
-  const isSafe = currentValue <= activePollutant.threshold
+  const isSafe = currentValue <= (scenario ? scenario.threshold : activePollutant.threshold)
+  const color = getPollutantColor(currentValue, (scenario ? scenario.threshold : activePollutant.threshold) * 0.7, (scenario ? scenario.threshold : activePollutant.threshold))
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -132,7 +155,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
       return (
         <div className="bg-background p-3 border border-border rounded-md shadow-md">
           <p className="font-manrope font-semibold">{label}</p>
-          <p className={`text-sm font-space-grotesk ${isSafe ? "text-safety-green" : "text-danger-coral"}`}>
+          <p className={`text-sm font-space-grotesk ${color === "green" ? "text-safety-green" : color === "yellow" ? "text-yellow-600" : "text-danger-coral"}`}>
             {activePollutant.name}: {dataPoint.value} {activePollutant.unit}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
@@ -145,7 +168,7 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
   }
 
   return (
-    <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] border-safety-green/20 hover:border-safety-green ${className || ""}`}>
+    <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] ${color === "green" ? "border-safety-green hover:border-safety-green" : color === "yellow" ? "border-yellow-400 hover:border-yellow-400" : "border-danger-coral hover:border-danger-coral"} ${className || ""}`}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Pollutant Trends</span>
@@ -181,12 +204,12 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                   <div className="mb-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold font-manrope">{pollutant.name}</h3>
-                      <div className={`text-sm font-space-grotesk ${isSafe ? "text-safety-green" : "text-danger-coral"}`}>
-                        {isSafe ? "✓ Safe" : "⚠ Unsafe"}
+                      <div className={`text-sm font-space-grotesk ${color === "green" ? "text-safety-green" : color === "yellow" ? "text-yellow-600" : "text-danger-coral"}`}>
+                        {color === "green" ? "✓ Safe" : color === "yellow" ? "● Moderate" : "⚠ Unsafe"}
                       </div>
                     </div>
                     <div className="flex items-baseline mt-2">
-                      <div className={`text-4xl font-bold font-manrope ${isSafe ? "text-safety-green" : "text-danger-coral"}`}>
+                      <div className={`text-4xl font-bold font-manrope ${color === "green" ? "text-safety-green" : color === "yellow" ? "text-yellow-600" : "text-danger-coral"}`}>
                         {currentValue}
                       </div>
                       <div className="text-sm font-space-grotesk text-muted-foreground ml-2">{pollutant.unit}</div>
@@ -201,25 +224,25 @@ export default function PollutantTrendsCard({ className }: PollutantTrendsCardPr
                   <div className="text-sm text-muted-foreground mb-4">{pollutant.description}</div>
                   <div className="mb-2 relative h-2 bg-muted rounded-full overflow-hidden">
                     <div
-                      className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isSafe ? "bg-safety-green" : "bg-danger-coral"}`}
+                      className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${color === "green" ? "bg-safety-green" : color === "yellow" ? "bg-yellow-200" : "bg-danger-coral"}`}
                       style={{
-                        width: `${Math.min((currentValue / pollutant.threshold) * 100, 100)}%`,
+                        width: `${Math.min((currentValue / (scenario ? scenario.threshold : activePollutant.threshold)) * 100, 100)}%`,
                       }}
                     />
                   </div>
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>0 {pollutant.unit}</span>
-                    <span>Threshold: {pollutant.threshold} {pollutant.unit}</span>
+                    <span>Threshold: {(scenario ? scenario.threshold : activePollutant.threshold)} {pollutant.unit}</span>
                   </div>
                 </div>
                 <div className="md:w-2/3 h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={pollutantData[pollutant.id as keyof typeof pollutantData]}>
+                    <LineChart data={trendData}>
                       <XAxis dataKey="day" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} tickMargin={10} />
                       <YAxis domain={[0, "auto"]} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} tickMargin={10} width={40} />
                       <Tooltip content={<CustomTooltip />} />
                       <ReferenceLine
-                        y={pollutant.threshold}
+                        y={scenario ? scenario.threshold : activePollutant.threshold}
                         stroke={theme === "dark" ? "hsl(0, 70%, 40%)" : "hsl(0, 100%, 70%)"}
                         strokeDasharray="3 3"
                         label={{

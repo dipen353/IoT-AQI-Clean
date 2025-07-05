@@ -8,6 +8,7 @@ import AQIVisualization from "@/components/aqi-visualization"
 import PollutantTrendsCard from "@/components/pollutant-trends-card"
 import { useState } from "react"
 import { getAQIColor } from "@/lib/utils"
+import { AnimatePresence, motion } from "framer-motion"
 
 const AQI_SCENARIOS = {
   good: {
@@ -104,14 +105,16 @@ export default function HomePage() {
                 ? "bg-yellow-200 text-yellow-600 border border-yellow-400 focus:ring-yellow-300"
                 : "bg-danger-coral/20 text-danger-coral border border-danger-coral focus:ring-danger-coral/40"
             return (
-              <button
+              <motion.button
                 key={key}
                 className={`px-4 py-2 text-sm font-medium font-manrope transition-colors rounded-md focus:outline-none focus:ring-2 ${scenario === key ? selectedColor : "text-muted-foreground hover:bg-muted/60 border border-transparent"}`}
                 onClick={() => setScenario(key as keyof typeof AQI_SCENARIOS)}
                 type="button"
+                layout
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
               >
                 {val.label}
-              </button>
+              </motion.button>
             )
           })}
         </div>
@@ -127,57 +130,72 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] ${aqiCardBorderClass}`}>
-          <h2 className="text-xl font-semibold font-manrope mb-4">Air Quality Index</h2>
-          <AQIVisualization value={data.aqi} previousValue={data.aqi - 6} />
-          <div className="mt-4 text-sm font-space-grotesk text-muted-foreground text-center">Updated {data.updated}</div>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <GasCard
-            title="CO₂ Levels"
-            value={data.co2}
-            unit="ppm"
-            status="CO₂ concentration"
-            data={co2Data}
-            threshold={1000}
-            change={parseFloat(((data.co2 - 600) / 600 * 100).toFixed(1))}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={scenario}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <Card className={`p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] ${aqiCardBorderClass}`}>
+              <h2 className="text-xl font-semibold font-manrope mb-4">Air Quality Index</h2>
+              <AQIVisualization value={data.aqi} previousValue={data.aqi - 6} />
+              <div className="mt-4 text-sm font-space-grotesk text-muted-foreground text-center">Updated {data.updated}</div>
+            </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <GasCard
+                title="CO₂ Levels"
+                value={data.co2}
+                unit="ppm"
+                status="CO₂ concentration"
+                data={co2Data}
+                threshold={1000}
+                change={parseFloat(((data.co2 - 600) / 600 * 100).toFixed(1))}
+              />
+              <GasCard
+                title="PM2.5 Levels"
+                value={data.pm25}
+                unit="μg/m³"
+                status="PM2.5 concentration"
+                data={pm25Data}
+                threshold={35}
+                change={parseFloat(((data.pm25 - 12) / 12 * 100).toFixed(1))}
+              />
+              <GasCard
+                title="VOC Levels"
+                value={data.voc}
+                unit="mg/m³"
+                status="VOC concentration"
+                data={vocData}
+                threshold={0.5}
+                change={parseFloat(((data.voc - 0.3) / 0.3 * 100).toFixed(1))}
+              />
+              <GasCard
+                title="CO Levels"
+                value={data.co}
+                unit="ppm"
+                status="CO concentration"
+                data={coData}
+                threshold={9}
+                change={parseFloat(((data.co - 5) / 5 * 100).toFixed(1))}
+              />
+            </div>
+          </div>
+          <PollutantTrendsCard
+            className="mb-8"
+            scenarioPollutants={{
+              co2: { value: data.co2, threshold: 1000 },
+              pm25: { value: data.pm25, threshold: 35 },
+              voc: { value: data.voc, threshold: 0.5 },
+              co: { value: data.co, threshold: 9 },
+              no2: { value: data.no2, threshold: 100 },
+              o3: { value: 40, threshold: 70 }, // Ozone static for demo
+            }}
           />
-
-          <GasCard
-            title="PM2.5 Levels"
-            value={data.pm25}
-            unit="μg/m³"
-            status="PM2.5 concentration"
-            data={pm25Data}
-            threshold={35}
-            change={parseFloat(((data.pm25 - 12) / 12 * 100).toFixed(1))}
-          />
-
-          <GasCard
-            title="VOC Levels"
-            value={data.voc}
-            unit="mg/m³"
-            status="VOC concentration"
-            data={vocData}
-            threshold={0.5}
-            change={parseFloat(((data.voc - 0.3) / 0.3 * 100).toFixed(1))}
-          />
-
-          <GasCard
-            title="CO Levels"
-            value={data.co}
-            unit="ppm"
-            status="CO concentration"
-            data={coData}
-            threshold={9}
-            change={parseFloat(((data.co - 5) / 5 * 100).toFixed(1))}
-          />
-        </div>
-      </div>
-
-      <PollutantTrendsCard className="mb-8" />
+        </motion.div>
+      </AnimatePresence>
 
       <div className="grid grid-cols-1 gap-6">
         <Card className="p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] border-safety-green/20 hover:border-safety-green">
