@@ -12,36 +12,28 @@ Experience the dashboard with live sensor data and interactive visualizations!
 ## 📸 Dashboard Screenshots
 
 ### Main Dashboard - Live Sensor Data
-![Dashboard Overview](Screenshot%202025-07-13%20222958_1752435968717.png)
-*Real-time air quality monitoring with AQI gauge, environmental metrics, and pollutant levels*
+![Dashboard Overview](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20222958_1752435968717.png)
 
 ### Live Sensor Data Card
-![Live Sensor Data](Screenshot%202025-07-13%20223017_1752435968717.png)
-*Real-time readings from connected ESP32 devices with device selection*
+![Live Sensor Data](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223017_1752435968717.png)
 
 ### Pollutant Trends Visualization
-![Pollutant Trends](Screenshot%202025-07-13%20223032_1752435968717.png)
-*Historical trends and detailed pollutant analysis with interactive charts*
+![Pollutant Trends](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223032_1752435968717.png)
 
 ### Analytics Dashboard
-![Analytics Page](Screenshot%202025-07-13%20223057_1752435968718.png)
-*AQI calculation methodology, formula breakdown, and gas contribution analysis*
+![Analytics Page](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223057_1752435968718.png)
 
 ### Threshold Reference Table
-![Threshold Reference](Screenshot%202025-07-13%20223106_1752435968718.png)
-*WHO and EPA air quality standards with safety thresholds for each pollutant*
+![Threshold Reference](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223106_1752435968718.png)
 
 ### Data Flow Diagram
-![Data Flow](Screenshot%202025-07-13%20223115_1752435968718.png)
-*Visual representation of how sensor data flows through the system*
+![Data Flow](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223115_1752435968718.png)
 
 ### ESP32 Hardware Setup
-![ESP32 Setup](Screenshot%202025-07-14%20010404_1752435968719.png)
-*Complete hardware setup with sensors, breadboard connections, and component list*
+![ESP32 Setup](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-14%20010404_1752435968719.png)
 
 ### Arduino IDE Development
-![Arduino Code](Screenshot%202025-07-14%20010722_1752435968719.png)
-*ESP32 sensor code running in Arduino IDE with real-time data transmission*
+![Arduino Code](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-14%20010722_1752435968719.png)
 
 ## ✨ Features
 
