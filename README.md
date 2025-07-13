@@ -5,42 +5,42 @@ A modern, real-time air quality monitoring dashboard built with Next.js 14, Fire
 
 ## 🚀 Live Demo
 
-**View Live Dashboard →** [https://iotaqi353.netlify.app](https://iotaqi353.netlify.app)
+**[View Live Dashboard →](https://iotaqi353.netlify.app/)**
 
 Experience the dashboard with live sensor data and interactive visualizations!
 
 ## 📸 Dashboard Screenshots
 
 ### Main Dashboard - Live Sensor Data
-![Dashboard Overview](attached_assets/Screenshot%202025-07-13%20222958_1752435968717.png)
+![Dashboard Overview](Screenshot%202025-07-13%20222958_1752435968717.png)
 *Real-time air quality monitoring with AQI gauge, environmental metrics, and pollutant levels*
 
 ### Live Sensor Data Card
-![Live Sensor Data](attached_assets/Screenshot%202025-07-13%20223017_1752435968717.png)
+![Live Sensor Data](Screenshot%202025-07-13%20223017_1752435968717.png)
 *Real-time readings from connected ESP32 devices with device selection*
 
 ### Pollutant Trends Visualization
-![Pollutant Trends](attached_assets/Screenshot%202025-07-13%20223032_1752435968717.png)
+![Pollutant Trends](Screenshot%202025-07-13%20223032_1752435968717.png)
 *Historical trends and detailed pollutant analysis with interactive charts*
 
 ### Analytics Dashboard
-![Analytics Page](attached_assets/Screenshot%202025-07-13%20223057_1752435968718.png)
+![Analytics Page](Screenshot%202025-07-13%20223057_1752435968718.png)
 *AQI calculation methodology, formula breakdown, and gas contribution analysis*
 
 ### Threshold Reference Table
-![Threshold Reference](attached_assets/Screenshot%202025-07-13%20223106_1752435968718.png)
+![Threshold Reference](Screenshot%202025-07-13%20223106_1752435968718.png)
 *WHO and EPA air quality standards with safety thresholds for each pollutant*
 
 ### Data Flow Diagram
-![Data Flow](attached_assets/Screenshot%202025-07-13%20223115_1752435968718.png)
+![Data Flow](Screenshot%202025-07-13%20223115_1752435968718.png)
 *Visual representation of how sensor data flows through the system*
 
 ### ESP32 Hardware Setup
-![ESP32 Setup](attached_assets/Screenshot%202025-07-14%20010404_1752435968719.png)
+![ESP32 Setup](Screenshot%202025-07-14%20010404_1752435968719.png)
 *Complete hardware setup with sensors, breadboard connections, and component list*
 
 ### Arduino IDE Development
-![Arduino Code](attached_assets/Screenshot%202025-07-14%20010722_1752435968719.png)
+![Arduino Code](Screenshot%202025-07-14%20010722_1752435968719.png)
 *ESP32 sensor code running in Arduino IDE with real-time data transmission*
 
 ## ✨ Features
@@ -212,18 +212,17 @@ The ESP32 sends data in this JSON format:
 - System health checks
 - Error reporting and logging
 
-## 🚀 Deployment on Replit
+## 🚀 Deployment
 
-The application is optimized for Replit deployment:
+The application is optimized for modern deployment platforms:
 
-1. **Fork/Import** your project to Replit
-2. **Add Secrets**: Configure your Firebase environment variables in Replit Secrets
-3. **Install Dependencies**: Run `npm install`
-4. **Deploy**: Use Replit's Deploy feature
-   - The app will be available at `https://your-repl-name.replit.app`
+1. **Build the Application**: Run `npm run build`
+2. **Environment Variables**: Configure your Firebase environment variables
+3. **Deploy**: Deploy to your preferred platform (Netlify, Vercel, etc.)
+   - The app is available at `https://iotaqi353.netlify.app/`
 
-### Replit Environment Setup
-Add these secrets in your Replit project:
+### Environment Setup
+Configure these environment variables:
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
 - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
 - `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
