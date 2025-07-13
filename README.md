@@ -1,101 +1,262 @@
-# IoT‑AQI Dashboard
 
-  
+# 🌍 IoT Air Quality Monitoring Dashboard
 
-A full‑stack **IoT Air‑Quality Index (AQI) Monitoring System** that streams sensor data from an ESP32‑based edge device to a cloud backend and renders an interactive, mobile‑first dashboard built with **Next 15**, **TypeScript**, **Tailwind CSS**, **Radix UI**, and **Recharts**.
+A modern, real-time air quality monitoring dashboard built with Next.js 14, Firebase, and ESP32 sensors. Monitor AQI, temperature, humidity, CO2, PM2.5, and other pollutants with beautiful visualizations and real-time data streaming.
 
-> Live demo → [https://iotaqi353.netlify.app](https://iotaqi353.netlify.app)
+## 🚀 Live Demo
 
----
+**View Live Dashboard →** [https://iotaqi353.netlify.app](https://iotaqi353.netlify.app)
 
-## ✨ Key Features
+Experience the dashboard with live sensor data and interactive visualizations!
 
-| Layer        | Highlights                                                                    |
-| ------------ | ----------------------------------------------------------------------------- |
-| **Edge**     | ESP32 + MQ‑3, MQ‑135, DHT‑11 sensors · Wi‑Fi MQTT push · On‑board calibration |
-| **Cloud**    | ThingSpeak / Firebase Realtime DB (swappable) · REST + WebSocket API          |
-| **Web**      | Next .js App Router · Tailwind CSS + Radix primitives · Dark‑mode support     |
-| **Data Viz** | Recharts area + bar graphs · real‑time spark‑lines · AQI colour coding        |
-| **CI/CD**    | GitHub → Netlify deploy preview & production · Node 18 runtime                |
+## 📸 Dashboard Screenshots
 
----
+### Main Dashboard - Live Sensor Data
+![Dashboard Overview](attached_assets/Screenshot%202025-07-13%20222958_1752435968717.png)
+*Real-time air quality monitoring with AQI gauge, environmental metrics, and pollutant levels*
 
-## 🏗 Architecture Diagram
+### Live Sensor Data Card
+![Live Sensor Data](attached_assets/Screenshot%202025-07-13%20223017_1752435968717.png)
+*Real-time readings from connected ESP32 devices with device selection*
 
-```
-[Sensors] → ESP32 MQTT → [Cloud DB] ←→ Next API Route → React Charts
-```
+### Pollutant Trends Visualization
+![Pollutant Trends](attached_assets/Screenshot%202025-07-13%20223032_1752435968717.png)
+*Historical trends and detailed pollutant analysis with interactive charts*
 
----
+### Analytics Dashboard
+![Analytics Page](attached_assets/Screenshot%202025-07-13%20223057_1752435968718.png)
+*AQI calculation methodology, formula breakdown, and gas contribution analysis*
 
-## 🚀 Quick Start
+### Threshold Reference Table
+![Threshold Reference](attached_assets/Screenshot%202025-07-13%20223106_1752435968718.png)
+*WHO and EPA air quality standards with safety thresholds for each pollutant*
+
+### Data Flow Diagram
+![Data Flow](attached_assets/Screenshot%202025-07-13%20223115_1752435968718.png)
+*Visual representation of how sensor data flows through the system*
+
+### ESP32 Hardware Setup
+![ESP32 Setup](attached_assets/Screenshot%202025-07-14%20010404_1752435968719.png)
+*Complete hardware setup with sensors, breadboard connections, and component list*
+
+### Arduino IDE Development
+![Arduino Code](attached_assets/Screenshot%202025-07-14%20010722_1752435968719.png)
+*ESP32 sensor code running in Arduino IDE with real-time data transmission*
+
+## ✨ Features
+
+### 🏠 Homepage Dashboard
+- **Live Sensor Data Card**: Real-time readings from your selected device
+- **AQI Gauge**: Visual air quality indicator with color-coded status
+- **Environmental Metrics**: Temperature, humidity, CO2, PM2.5 readings
+- **Pollutant Levels**: VOC, CO, NO2 with progress bars and trend indicators
+- **Device Selection**: Switch between multiple connected sensors
+- **Responsive Design**: Works perfectly on desktop and mobile devices
+
+### 📊 Analytics Page
+- **AQI Calculation Methods**: Interactive formulas and explanations
+- **Pollutant Thresholds**: WHO and EPA standards reference tables
+- **Data Flow Diagrams**: Visual representation of sensor data processing
+- **Gas Contribution Charts**: Breakdown of pollutant contributions to AQI
+- **Trend Analysis**: Historical data patterns and insights
+
+### 🔄 Real-time Features
+- **Firebase Integration**: Live data streaming from sensors
+- **Auto-refresh**: Real-time updates every few seconds
+- **Connection Status**: Live connection monitoring
+- **Device Status Tracking**: Online/offline status for each sensor
+
+## 🚀 Quick Start
+
+### 1. Installation
 
 ```bash
-# 1 Clone repository
-$ git clone https://github.com/dipen353/IoT-AQI-Clean.git && cd IoT-AQI-Clean
-
-# 2 Install deps (Node ≥18)
-$ npm install
-
-# 3 Create .env.local and configure keys
-NEXT_PUBLIC_API_URL=https://api.thingspeak.com/channels/XXXX/fields/1.json
-
-# 4 Run dev server
-$ npm run dev
+git clone <your-repo-url>
+cd iot-dashboard
+npm install
 ```
 
-Access [http://localhost:3000](http://localhost:3000).
+### 2. Firebase Setup
 
----
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
+2. Enable Realtime Database
+3. Copy your Firebase config
+4. Create a `.env.local` file:
 
-## ⚙️ Configuration
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your_project-default-rtdb.firebaseio.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
 
-| Variable              | Description                                   |
-| --------------------- | --------------------------------------------- |
-| `NEXT_PUBLIC_API_URL` | Endpoint that returns JSON formatted AQI data |
-| `NODE_VERSION`        | Locked to **18.20.8** on Netlify              |
-
----
-
-## 📦 Tech Stack
-
-* **Frontend:** Next 15 · React 19 · TypeScript · Tailwind CSS · Radix UI · Framer Motion
-* **Charts:** Recharts
-* **Backend (optional):** ThingSpeak / Firebase Realtime DB
-* **Edge Device:** ESP32 WROOM‑32 · MQ‑3, MQ‑135 (air quality) · DHT‑11 (temp & RH)
-* **CI/CD:** GitHub Actions → Netlify
-
----
-
-## 🧪 Testing
+### 3. Run the Application
 
 ```bash
-npm run lint   # ESLint + TypeScript strict mode
-npm run build  # Production build – will fail on type errors
+npm run dev
 ```
 
+Visit `http://localhost:3000` to see your dashboard with live sensor data!
+
+## 📱 Pages & Features
+
+### Homepage (`/`)
+- **Live Sensor Data Card**: Real-time readings from selected device with automatic refresh
+- **AQI Gauge**: Color-coded air quality visualization with status indicators
+- **Environmental Metrics**: Temperature, humidity, CO2, PM2.5 with trend arrows
+- **Pollutant Progress Bars**: VOC, CO, NO2 levels with threshold indicators
+- **Device Selection**: Dropdown to switch between connected sensors
+- **Responsive Layout**: Optimized for all screen sizes
+
+### Analytics (`/analytics`)
+- **AQI Calculation Formulas**: Interactive cards showing calculation methods
+- **Pollutant Thresholds**: Reference tables for WHO and EPA standards
+- **Data Flow Visualization**: How sensor data flows through the system
+- **Gas Contribution Analysis**: Breakdown of each pollutant's impact on AQI
+- **Educational Content**: Learn about air quality standards and measurements
+
+## 🔧 API Endpoints
+
+### Sensors API (`/api/sensors`)
+- `GET` - Fetch latest sensor readings
+- `POST` - Submit new sensor data from ESP32
+- Query parameters: `deviceId`, `historical`, `limit`
+
+### Devices API (`/api/devices`)
+- `GET` - List all registered devices with status
+- `POST` - Register new device
+- `PUT` - Update device information
+
+## 🛠️ ESP32 Integration
+
+### Hardware Requirements
+- ESP32 development board
+- MQ-135 (Air Quality sensor)
+- DHT22 (Temperature/Humidity)
+- MQ-7 (CO sensor)
+- Optional: PM2.5, VOC sensors
+
+### Arduino Code
+Upload the provided ESP32 code from `/arduino/esp32_sensor_code/esp32_sensor_code.ino`:
+
+```cpp
+// Configure your WiFi and Firebase details
+const char* ssid = "your_wifi_name";
+const char* password = "your_wifi_password";
+const char* firebase_host = "your_project-default-rtdb.firebaseio.com";
+```
+
+### Data Format
+The ESP32 sends data in this JSON format:
+```json
+{
+  "deviceId": "esp32_001",
+  "aqi": 75,
+  "temperature": 24.5,
+  "humidity": 45,
+  "co2": 650,
+  "pm25": 15.5,
+  "voc": 0.3,
+  "co": 5,
+  "no2": 25,
+  "location": "Living Room",
+  "timestamp": "2025-01-07T12:00:00Z"
+}
+```
+
+## 🏗️ Tech Stack
+
+- **Frontend**: Next.js 14, React, TypeScript
+- **Styling**: Tailwind CSS, Framer Motion
+- **Database**: Firebase Realtime Database
+- **Charts**: Recharts for data visualization
+- **UI Components**: Custom UI components with shadcn/ui
+- **Icons**: Lucide React
+- **Hardware**: ESP32 with various sensors
+
+## 🎨 Design Features
+
+- **Modern UI**: Clean, professional design with smooth animations
+- **Color-coded Status**: Intuitive color system for air quality levels
+- **Responsive**: Works on desktop, tablet, and mobile
+- **Real-time Updates**: Live data streaming with automatic refresh
+- **Interactive Charts**: Hover effects and detailed tooltips
+
+## 📊 Data Sources
+
+### Supported Databases
+- **Firebase Realtime Database** (Primary)
+- **PostgreSQL** (Optional)
+- **MongoDB** (Optional)
+
+### Real-time Updates
+- Firebase real-time listeners for live data
+- Automatic reconnection handling
+- Offline state management
+- Data caching for performance
+
+## 🔐 Security
+
+- Environment variable configuration
+- Firebase security rules
+- API rate limiting
+- Device authentication tokens
+
+## 📈 Monitoring
+
+- Device connection status
+- Data quality indicators
+- System health checks
+- Error reporting and logging
+
+## 🚀 Deployment on Replit
+
+The application is optimized for Replit deployment:
+
+1. **Fork/Import** your project to Replit
+2. **Add Secrets**: Configure your Firebase environment variables in Replit Secrets
+3. **Install Dependencies**: Run `npm install`
+4. **Deploy**: Use Replit's Deploy feature
+   - The app will be available at `https://your-repl-name.replit.app`
+
+### Replit Environment Setup
+Add these secrets in your Replit project:
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
+
+## 🔍 Demo Data
+
+The system includes demo scenarios (Good/Moderate/Unhealthy) that generate realistic mock data for testing without physical sensors.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For issues or questions:
+1. Check the Firebase setup guide in `firebase-setup.md`
+2. Review the backend integration guide in `README_BACKEND.md`
+3. Enable debug logging in your environment
+4. Check ESP32 serial monitor for device connectivity
+
 ---
 
-## 🛠 Roadmap
+**Built with ❤️ using Next.js, Firebase, and ESP32**
 
-*
-
----
-
-## 🤝 Contributing
-
-1. Fork the repo & create your branch (`git checkout -b feature/foo`)
-2. Commit your changes (`git commit -am 'feat: add foo'`)
-3. Push and open a PR against **main**
-
-All contributions, big or small, are welcome!
-
----
-
-## 📄 License
-
-Distributed under the **MIT License**. See `LICENSE` for details.
-
----
-
-> © 2025 Dipen Reddy – Built for academic and hobby IoT experimentation.
+**🌐 [View Live Demo](https://iotaqi353.netlify.app/)**
