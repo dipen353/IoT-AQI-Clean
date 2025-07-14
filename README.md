@@ -12,28 +12,28 @@ Experience the dashboard with live sensor data and interactive visualizations!
 ## 📸 Dashboard Screenshots
 
 ### Main Dashboard - Live Sensor Data
-![Dashboard Overview](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20222958_1752435968717.png)
+![Dashboard Overview](screenshots/Screenshot 2025-07-13 222958.png)
 
 ### Live Sensor Data Card
-![Live Sensor Data](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223017_1752435968717.png)
+![Live Sensor Data](screenshots/Screenshot 2025-07-13 223017.png)
 
 ### Pollutant Trends Visualization
-![Pollutant Trends](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223032_1752435968717.png)
+![Pollutant Trends](screenshots/Screenshot 2025-07-13 223032.png)
 
 ### Analytics Dashboard
-![Analytics Page](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223057_1752435968718.png)
+![Analytics Page](screenshots/Screenshot 2025-07-13 223057.png)
 
 ### Threshold Reference Table
-![Threshold Reference](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223106_1752435968718.png)
+![Threshold Reference](screenshots/Screenshot 2025-07-13 223106.png)
 
 ### Data Flow Diagram
-![Data Flow](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-13%20223115_1752435968718.png)
+![Data Flow](screenshots/Screenshot 2025-07-13 223115.png)
 
 ### ESP32 Hardware Setup
-![ESP32 Setup](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-14%20010404_1752435968719.png)
+![ESP32 Setup](screenshots/Screenshot 2025-07-14 010404.png)
 
 ### Arduino IDE Development
-![Arduino Code](https://raw.githubusercontent.com/dipen353/IoT-AQI-Mon-Sys/main/Screenshot%202025-07-14%20010722_1752435968719.png)
+![Arduino Code](screenshots/Screenshot 2025-07-14 010722.png)
 
 ## ✨ Features
 
