@@ -12,28 +12,36 @@ Experience the dashboard with live sensor data and interactive visualizations!
 ## 📸 Dashboard Screenshots
 
 ### Main Dashboard - Live Sensor Data
-![Dashboard Overview](screenshots/Screenshot 2025-07-13 222958.png)
+**Dashboard Overview** <img width="1731" height="909" alt="Screenshot 2025-07-13 222958 png" src="https://github.com/user-attachments/assets/e4b79767-2a30-4272-b54c-16ecfc7f8e57" />
+
 
 ### Live Sensor Data Card
-![Live Sensor Data](screenshots/Screenshot 2025-07-13 223017.png)
+**Live Sensor Data** <img width="1731" height="907" alt="Screenshot 2025-07-13 223032 png" src="https://github.com/user-attachments/assets/cc86e8f8-192d-414c-a4b7-e659ff73dd99" />
+
 
 ### Pollutant Trends Visualization
-![Pollutant Trends](screenshots/Screenshot 2025-07-13 223032.png)
+**Pollutant Trends** <img width="1603" height="702" alt="image" src="https://github.com/user-attachments/assets/75829b84-02be-41b1-bbd2-6debc62fe455" />
+
 
 ### Analytics Dashboard
-![Analytics Page](screenshots/Screenshot 2025-07-13 223057.png)
+**Analytics Page** <img width="1708" height="909" alt="Screenshot 2025-07-13 223057 png" src="https://github.com/user-attachments/assets/36bec7b3-0b58-4cf3-834b-bc68ca907977" />
+
 
 ### Threshold Reference Table
-![Threshold Reference](screenshots/Screenshot 2025-07-13 223106.png)
+**Threshold Reference** <img width="1656" height="909" alt="Screenshot 2025-07-13 223106 png" src="https://github.com/user-attachments/assets/b3b8470f-9c4c-482a-8ac7-c545dcf17eff" />
+
 
 ### Data Flow Diagram
-![Data Flow](screenshots/Screenshot 2025-07-13 223115.png)
+**Data Flow** <img width="1655" height="912" alt="Screenshot 2025-07-13 223115 png" src="https://github.com/user-attachments/assets/395298f9-e964-4489-8d6b-2a99e75928bc" />
+
 
 ### ESP32 Hardware Setup
-![ESP32 Setup](screenshots/Screenshot 2025-07-14 010404.png)
+**ESP32 Setup** <img width="1292" height="698" alt="Screenshot 2025-07-14 010404 png" src="https://github.com/user-attachments/assets/fcdbe156-e118-42ea-8d88-20b269f4dadb" />
+
 
 ### Arduino IDE Development
-![Arduino Code](screenshots/Screenshot 2025-07-14 010722.png)
+**Arduino Code** <img width="1913" height="1079" alt="Screenshot 2025-07-14 010722 png" src="https://github.com/user-attachments/assets/969720e6-5baf-418b-9978-5ae9ffef9ee7" />
+
 
 ## ✨ Features
 
